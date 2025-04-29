@@ -1,36 +1,32 @@
+import isEqual from 'lodash.isequal';
 import store from './store';
-
-import {saveCart} from '../api/cart';
+import { saveCart } from '../api/cart';
 
 let currentAuth;
 let currentCart;
 
-function listener(){
-   
-  let previousAuth = currentAuth;
-  let previousCart = currentCart;
+function listener() {
+  const previousAuth = currentAuth;
+  const previousCart = currentCart;
 
   currentAuth = store.getState().auth;
   currentCart = store.getState().cart;
 
-  let { token } = currentAuth;
+  const { token } = currentAuth;
 
-  if(currentAuth !== previousAuth){
+  if (!isEqual(currentAuth, previousAuth)) {
     localStorage.setItem('auth', JSON.stringify(currentAuth));
     saveCart(token, currentCart);
   }
 
-  if(currentCart !== previousCart){
+  if (!isEqual(currentCart, previousCart)) {
     localStorage.setItem('cart', JSON.stringify(currentCart));
     saveCart(token, currentCart);
   }
-
 }
 
-function listen(){
-
+function listen() {
   store.subscribe(listener);
-
 }
 
-export { listen }
+export { listen };
